@@ -1,13 +1,39 @@
+import React, { useEffect } from "react";
+import { Slot, useRouter, useSegments } from "expo-router";
+import { AuthContextProvider, useAuth } from "../context/authContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 import "../global.css";
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
 
 const MainLayout = () => {
-  return (
-    <View>
-      <Text className="text-white bg-red-500">MainLayout</Text>
-    </View>
-  )
-}
+  const { isAuthenticated } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
 
-export default MainLayout;
+  useEffect(() => {
+    if (typeof isAuthenticated === "undefined") return;
+    const inApp = segments[0] === "(app)";
+
+    if (isAuthenticated && !inApp) {
+      router.replace("home");
+    } else if (isAuthenticated === false) {
+      router.replace("singIn");
+    }
+  }, [isAuthenticated]);
+
+  return <Slot />;
+};
+
+const RootLayout = () => {
+  return (
+    <AuthContextProvider>
+      <StatusBar style="dark" />
+      <SafeAreaView>
+        <MainLayout />
+      </SafeAreaView>
+    </AuthContextProvider>
+  );
+};
+
+export default RootLayout;
