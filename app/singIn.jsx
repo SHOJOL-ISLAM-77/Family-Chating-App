@@ -9,6 +9,8 @@ import {
 import React, { useRef } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import InputField from "../components/InputField";
+import { StatusBar } from "expo-status-bar";
 
 const SingIn = () => {
   const email = useRef("");
@@ -29,6 +31,7 @@ const SingIn = () => {
         gap: 20,
       }}
     >
+      <StatusBar style="dark" />
       <Image
         className="h-2/6 w-auto"
         source={{
@@ -36,39 +39,34 @@ const SingIn = () => {
         }}
       />
       <View className="mx-4 ">
-        <Text className="text-5xl text-center"> Sing In Now</Text>
+        <Text className="text-5xl text-center"> Sing In</Text>
         <View className="pt-4 gap-6">
-          <View className="bg-neutral-100 rounded-md px-3 flex-row justify-start items-center gap-4">
-            <MaterialCommunityIcons
-              name="email-outline"
-              size={24}
-              color="black"
-              className="text-3xl"
-            />
-            <TextInput
-              onChangeText={(value) => (email.current = value)}
-              className="flex-1 text-xl"
-              placeholder="Type your Email"
-              placeholderTextColor={"gray"}
-              keyboardType="email-address"
-            />
-          </View>
-          <View className="bg-neutral-100 rounded-md px-3 flex-row justify-start items-center gap-4">
-            <MaterialIcons
-              name="lock-outline"
-              size={24}
-              color="black"
-              className="text-3xl"
-            />
-            <TextInput
-              onChangeText={(value) => (password.current = value)}
-              className="flex-1 text-xl"
-              placeholder="Type your Password"
-              placeholderTextColor={"gray"}
-              keyboardType="default"
-              secureTextEntry={true}
-            />
-          </View>
+          <InputField
+            state={email}
+            kbType="email-address"
+            placeholder={"Type your email"}
+            icon={
+              <MaterialCommunityIcons
+                name="email-outline"
+                size={24}
+                color="black"
+                className="text-3xl"
+              />
+            }
+          />
+          <InputField
+            state={password}
+            placeholder={"Type your Password"}
+            secure={true}
+            icon={
+              <MaterialIcons
+                name="lock-outline"
+                size={24}
+                color="black"
+                className="text-3xl"
+              />
+            }
+          />
         </View>
         <Text className="text-lg text-right font-semibold">
           Forget password ?
@@ -81,8 +79,8 @@ const SingIn = () => {
         </TouchableOpacity>
         <Text className="text-lg py-2 text-center">
           Don't have account?{" "}
-          <Link href={"singUp"} className="text-indigo-500 underline">
-            Please Sing Up
+          <Link href={"singUp"} className="text-indigo-500 font-bold">
+            Sing Up
           </Link>
         </Text>
       </View>

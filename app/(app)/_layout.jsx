@@ -1,12 +1,13 @@
-import { View, Text } from "react-native";
 import React from "react";
+import { Stack } from "expo-router";
+import { StatusBar } from "react-native";
 
 const _layout = () => {
-  return (
-    <View>
-      <Text className="text-center">_layout</Text>
-    </View>
-  );
+  return;
+  // <>
+  //   <StatusBar />
+  <Stack />;
+  // </>;
 };
 
 export default _layout;

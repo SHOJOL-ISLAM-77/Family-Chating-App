@@ -28,8 +28,7 @@ const MainLayout = () => {
 const RootLayout = () => {
   return (
     <AuthContextProvider>
-      <StatusBar style="dark" />
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <MainLayout />
       </SafeAreaView>
     </AuthContextProvider>
