@@ -1,13 +1,18 @@
-import React from "react";
 import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import React from "react";
+import HomeHeader from "../../components/HomeHeader";
 
 const _layout = () => {
-  return;
-  // <>
-  //   <StatusBar />
-  <Stack />;
-  // </>;
+  return (
+    <Stack>
+      <Stack.Screen
+        name="home"
+        options={{
+          header: () => <HomeHeader />,
+        }}
+      ></Stack.Screen>
+    </Stack>
+  );
 };
 
 export default _layout;

@@ -1,13 +1,13 @@
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase.config";
-import { doc, setDoc } from "firebase/firestore";
 
 export const AuthContext = createContext();
 
@@ -17,10 +17,11 @@ export const AuthContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unSubs = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
+    const unSubs = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
         setIsAuthenticated(true);
+        updateUserData(user.uid);
       } else {
         setUser(null);
         setIsAuthenticated(false);
@@ -29,6 +30,22 @@ export const AuthContextProvider = ({ children }) => {
     });
     return unSubs;
   }, []);
+
+  const updateUserData = async (userId) => {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      let data = docSnap.data();
+      console.log({ imUser: { user } });
+      setUser({
+        ...user,
+        userName: data?.userName,
+        profileUrl: data?.profileUrl,
+        userId: data?.userId,
+      });
+    }
+  };
 
   const login = async (email, password) => {
     try {

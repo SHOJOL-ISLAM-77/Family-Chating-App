@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
 import { Slot, useRouter, useSegments } from "expo-router";
-import { AuthContextProvider, useAuth } from "../context/authContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
+import { SafeAreaView } from "react-native";
+import { AuthContextProvider, useAuth } from "../context/authContext";
 import "../global.css";
-import { View, Text } from "react-native";
+import { MenuProvider } from "react-native-popup-menu";
 
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
@@ -16,7 +16,7 @@ const MainLayout = () => {
     const inApp = segments[0] === "(app)";
 
     if (isAuthenticated && !inApp) {
-      router.replace("home");
+      router.replace("/home");
     } else if (isAuthenticated === false) {
       router.replace("singIn");
     }
@@ -27,11 +27,14 @@ const MainLayout = () => {
 
 const RootLayout = () => {
   return (
-    <AuthContextProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <MainLayout />
-      </SafeAreaView>
-    </AuthContextProvider>
+    <MenuProvider>
+      <AuthContextProvider>
+        <StatusBar style="dark" />
+        <SafeAreaView style={{ flex: 1 }}>
+          <MainLayout />
+        </SafeAreaView>
+      </AuthContextProvider>
+    </MenuProvider>
   );
 };
 

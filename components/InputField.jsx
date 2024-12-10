@@ -1,5 +1,5 @@
-import { View, Text, TextInput } from "react-native";
 import React from "react";
+import { TextInput, View } from "react-native";
 
 const InputField = ({
   icon,
@@ -9,7 +9,7 @@ const InputField = ({
   secure = false,
 }) => {
   return (
-    <View className="bg-neutral-100 rounded-md px-3 flex-row justify-start items-center gap-4">
+    <View className="bg-neutral-100 rounded-md px-3 py-1  flex-row justify-start items-center gap-4">
       {icon}
       <TextInput
         onChangeText={(value) => (state.current = value)}

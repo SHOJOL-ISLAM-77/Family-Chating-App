@@ -1,37 +1,35 @@
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import React, { useRef } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import InputField from "../components/InputField";
 import { StatusBar } from "expo-status-bar";
+import React, { useRef } from "react";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import InputField from "../components/InputField";
+import { useAuth } from "../context/authContext";
 
 const SingIn = () => {
-  const email = useRef("");
   const password = useRef("");
+  const email = useRef("");
+  const { login } = useAuth();
 
   const handleLogin = async () => {
     if (!email.current || !password.current) {
       Alert.alert("Sing In", "Email and Password is requeired");
       return;
     }
-    console.log({ email, password });
+    const response = await login(email.current, password.current);
+    if (!response.success) {
+      Alert.alert("Sing In", "Invalid Email or Password");
+      return;
+    }
   };
   return (
     <View
       style={{
-        height: "100%",
-        width: "100%",
+        flex: 1,
         gap: 20,
+        marginTop: 40,
       }}
     >
-      <StatusBar style="dark" />
       <Image
         className="h-2/6 w-auto"
         source={{
