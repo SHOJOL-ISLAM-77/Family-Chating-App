@@ -1,7 +1,7 @@
-import { View, Text, FlatList } from "react-native";
-import React from "react";
-import ChatItem from "./ChatItem";
 import { useRouter } from "expo-router";
+import React from "react";
+import { FlatList, View } from "react-native";
+import ChatItem from "./ChatItem";
 
 const ChatList = ({ users }) => {
   const router = useRouter();
@@ -14,12 +14,7 @@ const ChatList = ({ users }) => {
         contentContainerStyle={{ flex: 1, paddingVertical: 20 }}
         showsVerticalScrollIndicator={false}
         renderItem={({ index, item }) => (
-          <ChatItem
-            router={router}
-            noBorder={index + 1 == users?.length}
-            item={item}
-            index={index}
-          />
+          <ChatItem router={router} noBorder={index + 1 == users?.length} item={item} index={index} />
         )}
       />
     </View>

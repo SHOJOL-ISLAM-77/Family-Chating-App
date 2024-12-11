@@ -1,30 +1,30 @@
 import { StatusBar } from "expo-status-bar";
+import { getDocs, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
-import { useAuth } from "../../context/authContext";
+import { ActivityIndicator, View } from "react-native";
 import ChatList from "../../components/ChatList";
-import { getDoc, query, where } from "firebase/firestore";
+import { useAuth } from "../../context/authContext";
 import { userRef } from "../../firebase.config";
 
 const home = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState([1, 2, 3, 4]);
-  // console.log(user);
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
-    if (user.uid) {
-      // console.log({ userId: user.userId, uid: user.uider });
+    if (user?.uid) {
       getUser();
     }
   }, [user]);
 
   const getUser = async () => {
     const q = query(userRef, where("userId", "!=", user.uid));
-    const querySnap = await getDoc(q);
-    let data;
-    querySnap.forEtch((doc) => {
+    const querySnap = await getDocs(q);
+
+    let data = [];
+    querySnap.forEach((doc) => {
       data.push({ ...doc.data() });
     });
-    console.log(data);
+    setUsers(data);
   };
   return (
     <View className="bg-white flex-1">

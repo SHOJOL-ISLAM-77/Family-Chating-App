@@ -1,11 +1,5 @@
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase.config";
 
@@ -32,18 +26,24 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   const updateUserData = async (userId) => {
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "users", userId);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      let data = docSnap.data();
-      console.log({ imUser: { user } });
-      setUser({
-        ...user,
-        userName: data?.userName,
-        profileUrl: data?.profileUrl,
-        userId: data?.userId,
-      });
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+
+        setUser((prevUser) => ({
+          ...prevUser,
+          userName: data?.userName || prevUser.userName,
+          profileUrl: data?.profileUrl || prevUser.profileUrl,
+          userId: data?.userId || prevUser.userId,
+        }));
+      } else {
+        console.log("No such document exists!");
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
     }
   };
 
@@ -73,22 +73,13 @@ export const AuthContextProvider = ({ children }) => {
 
   const register = async (email, password, userName, profileUrl) => {
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const response = await createUserWithEmailAndPassword(auth, email, password);
       const user = response.user;
-
-      await updateProfile(user, {
-        displayName: userName,
-        photoURL: profileUrl,
-      });
 
       await setDoc(doc(db, "users", user.uid), {
         userName,
         profileUrl,
-        userId: user.uid,
+        userId: user?.uid,
       });
 
       return { success: true, data: user };
@@ -98,9 +89,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, isAuthenticated, loading, login, logOut, register }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated, loading, login, logOut, register }}>
       {children}
     </AuthContext.Provider>
   );

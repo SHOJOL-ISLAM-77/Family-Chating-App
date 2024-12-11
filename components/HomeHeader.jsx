@@ -1,17 +1,11 @@
-import { View, Text, SafeAreaView, Platform } from "react-native";
-import React from "react";
-import blurhash from "../utils/blurHash";
-import { Image } from "expo-image";
-import { useAuth } from "../context/authContext";
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from "react-native-popup-menu";
-import ProfileOptions from "./CustomMenuItem";
-import CustomMenuItem from "./CustomMenuItem";
 import { Feather } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import React from "react";
+import { Text, View } from "react-native";
+import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
+import { useAuth } from "../context/authContext";
+import blurhash from "../utils/blurHash";
+import CustomMenuItem from "./CustomMenuItem";
 
 const HomeHeader = () => {
   const { user, logOut } = useAuth();
@@ -25,10 +19,7 @@ const HomeHeader = () => {
   return (
     <View
       style={{ paddingTop: 40 }}
-      className={
-        "px-5 pb-2 bg-indigo-400 rounded-b-3xl shadow justify-between items-center flex-row"
-      }
-    >
+      className={"px-5 pb-2 bg-[#00DEC1] rounded-b-3xl shadow justify-between items-center flex-row"}>
       <Text className="text-3xl text-white font-medium">Chats</Text>
       <Menu>
         <MenuTrigger
@@ -36,8 +27,7 @@ const HomeHeader = () => {
             triggerWraper: {
               // marginTop:20
             },
-          }}
-        >
+          }}>
           <Image
             style={{ height: 50, aspectRatio: 1, borderRadius: 100 }}
             source={user?.profileUrl}
@@ -53,10 +43,9 @@ const HomeHeader = () => {
               marginTop: 45,
               marginLeft: -30,
               borderCurve: "continuous",
-              width: 160
+              width: 160,
             },
-          }}
-        >
+          }}>
           <CustomMenuItem
             value={"profile"}
             action={handleProfileAction}
