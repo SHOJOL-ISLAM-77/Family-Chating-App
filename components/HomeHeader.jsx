@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
@@ -9,8 +10,9 @@ import CustomMenuItem from "./CustomMenuItem";
 
 const HomeHeader = () => {
   const { user, logOut } = useAuth();
+  const router = useRouter();
   const handleProfileAction = (value) => {
-    console.log(value);
+    router.push("profile");
   };
 
   const handleLogOut = async () => {
@@ -22,12 +24,7 @@ const HomeHeader = () => {
       className={"px-5 pb-2 bg-[#00DEC1] rounded-b-3xl shadow justify-between items-center flex-row"}>
       <Text className="text-3xl text-white font-medium">Chats</Text>
       <Menu>
-        <MenuTrigger
-          customStyles={{
-            triggerWraper: {
-              // marginTop:20
-            },
-          }}>
+        <MenuTrigger>
           <Image
             style={{ height: 50, aspectRatio: 1, borderRadius: 100 }}
             source={user?.profileUrl}

@@ -3,9 +3,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Keyboard, TextInput, TouchableOpacity, View } from "react-native";
 import ChatRoomHeader from "../../components/ChatRoomHeader";
-import KeyBoardView from "../../components/KeyBoardView";
 import Message from "../../components/Message";
 import { useAuth } from "../../context/authContext";
 import { db } from "../../firebase.config";
@@ -14,6 +13,7 @@ import getRoomId from "../../utils/getRoomId";
 const ChatRoom = () => {
   const item = useLocalSearchParams();
   const [messages, setMessages] = useState([]);
+  const scrollViewRef = useRef(null);
   const { user } = useAuth();
   const router = useRouter();
   const textRef = useRef();
@@ -34,7 +34,23 @@ const ChatRoom = () => {
 
       setMessages([...allMessages]);
     });
+    const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", updateScrollView);
+
+    return () => {
+      unsub();
+      keyboardDidShowListener.remove();
+    };
   }, []);
+
+  useEffect(() => {
+    updateScrollView();
+  }, [messages]);
+
+  const updateScrollView = () => {
+    setTimeout(() => {
+      scrollViewRef?.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
 
   const createRoomIfNotExist = async () => {
     const roomId = getRoomId(item.userId, user?.userId);
@@ -68,28 +84,26 @@ const ChatRoom = () => {
       Alert.alert("Message", "sending Failed");
     }
   };
-  // console.log({ messages });
   return (
     <View className="flex-1 bg-white">
-      <StatusBar style="dark" />
       <ChatRoomHeader item={item} router={router} />
       <View className="p-px bg-gray-300" />
-      <KeyBoardView inChat={true}>
-        <View className="flex-1 justify-between bg-neutral-100 overflow-visible px-3 py-1">
-          <Message messages={messages} />
-          <View className="bg-white rounded-2xl flex-row justify-between items-center px-3 py-1.5 my-2">
-            <TextInput
-              ref={inputRef}
-              onChangeText={(value) => (textRef.current = value)}
-              className="flex-1"
-              placeholder="Type message..."
-            />
-            <TouchableOpacity onPress={handleSendMessage} className="bg-gray-200 p-2 rounded-full ">
-              <MaterialCommunityIcons name="send" size={24} color={"#43464b"} />
-            </TouchableOpacity>
-          </View>
+      <StatusBar style="dark" />
+
+      <View className="flex-1 justify-between bg-neutral-200 overflow-visible px-3 py-1">
+        <Message scrollRef={scrollViewRef} messages={messages} />
+        <View className="bg-white rounded-full flex-row justify-between items-center px-3 py-1.5 my-2">
+          <TextInput
+            ref={inputRef}
+            onChangeText={(value) => (textRef.current = value)}
+            className="flex-1"
+            placeholder="Type message..."
+          />
+          <TouchableOpacity onPress={handleSendMessage} className="bg-gray-200 p-2 rounded-full ">
+            <MaterialCommunityIcons name="send" size={24} color={"#43464b"} />
+          </TouchableOpacity>
         </View>
-      </KeyBoardView>
+      </View>
     </View>
   );
 };
