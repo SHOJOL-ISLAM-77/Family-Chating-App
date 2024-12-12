@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View } from "react-native";
 
 const KeyBoardView = ({ children, inChat = false }) => {
   let kbConfig = {};
