@@ -36,7 +36,7 @@ const ChatItem = ({ item, index, router, noBorder }) => {
     }
   }, [message?.createdAt]);
 
-  console.log(message);
+
   return (
     <TouchableOpacity
       onPress={goToChat}

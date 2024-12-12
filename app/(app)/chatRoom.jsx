@@ -80,7 +80,6 @@ const ChatRoom = () => {
         createdAt: Timestamp.fromDate(new Date()),
       });
     } catch (error) {
-      console.log(error.message);
       Alert.alert("Message", "sending Failed");
     }
   };

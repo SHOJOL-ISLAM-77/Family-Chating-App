@@ -21,7 +21,10 @@ const HomeHeader = () => {
   return (
     <View
       style={{ paddingTop: 40 }}
-      className={"px-5 pb-2 bg-[#00DEC1] rounded-b-3xl shadow justify-between items-center flex-row"}>
+      className={
+        "px-5 pb-2 bg-[#00DEC1] rounded-b-3xl shadow justify-between items-center flex-row"
+      }
+    >
       <Text className="text-3xl text-white font-medium">Chats</Text>
       <Menu>
         <MenuTrigger>
@@ -42,7 +45,8 @@ const HomeHeader = () => {
               borderCurve: "continuous",
               width: 160,
             },
-          }}>
+          }}
+        >
           <CustomMenuItem
             value={"profile"}
             action={handleProfileAction}

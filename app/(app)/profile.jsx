@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Text, View } from "react-native";
+import { View, Text } from "react-native";
 import ProfileHeader from "../../components/ProfileHeader";
 import { useAuth } from "../../context/authContext";
 import blurhash from "../../utils/blurHash";
@@ -23,11 +23,11 @@ const profile = () => {
           />
         </View>
         <View className="flex-row py-5 items-center px-5">
-          <Text className="w-1/3 text-3xl text-gray-500">Name: </Text>{" "}
+          <Text className="w-1/3 text-3xl text-gray-500">Name: </Text>
           <Text className="w-full text-3xl">{user?.userName}</Text>
         </View>
         <View className="flex-row py-5 items-center px-5">
-          <Text className="w-1/3 text-3xl text-gray-500">Email: </Text>{" "}
+          <Text className="w-1/3 text-3xl text-gray-500">Email: </Text>
           <Text className="w-full text-2xl">{user?.email}</Text>
         </View>
       </View>

@@ -4,33 +4,54 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React, { useContext, useRef } from "react";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext, useRef, useState } from "react";
+import {
+  Alert,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  Keyboard,
+} from "react-native";
+
+import axios from "axios";
 import InputField from "../components/InputField";
 import KeyBoardView from "../components/KeyBoardView";
 import { AuthContext } from "../context/authContext";
+import uploadImage from "../utils/uploadImage";
 
-const SingUp = () => {
+const SignUp = () => {
   const { register } = useContext(AuthContext);
   const email = useRef("");
   const password = useRef("");
   const name = useRef("");
   const URL = useRef("");
+  const [uploading, setUploading] = useState(false);
+  const [signingUp, setSigningUp] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
 
-  const handleSingUp = async () => {
+  const handleSignUp = async () => {
     if (!email.current || !password.current || !name.current || !URL.current) {
-      Alert.alert("Sing Up", "Email and Password are required");
+      Alert.alert("Sign Up", "All fields are required");
       return;
     }
-    const response = await register(
-      email.current,
-      password.current,
-      name.current,
-      URL.current
-    );
-    if (!response.success) {
-      Alert.alert("Sing Up", "Invalid email");
+
+    try {
+      setSigningUp(true);
+      const response = await register(
+        email.current,
+        password.current,
+        name.current,
+        URL.current
+      );
+      if (!response.success) {
+        Alert.alert("Sign Up", "Invalid email or other issue");
+      }
+    } catch (error) {
+      Alert.alert("Sign Up", "Something went wrong during registration.");
+    } finally {
+      setSigningUp(false);
     }
   };
 
@@ -65,11 +86,29 @@ const SingUp = () => {
               placeholder={"Type your Name"}
               icon={<Entypo name="email" size={24} color="black" />}
             />
-            <InputField
-              state={URL}
-              placeholder={"Profile URL"}
-              icon={<Entypo name="link" size={24} color="black" />}
-            />
+            <TouchableOpacity
+              onPress={() => uploadImage(setUploading, setUploadStatus, URL)}
+              className="bg-gray-200 py-2 rounded-lg flex-row items-center"
+              disabled={uploading || signingUp}
+            >
+              {uploading ? (
+                <ActivityIndicator
+                  size="small"
+                  color="black"
+                  className="ml-2"
+                />
+              ) : (
+                <Entypo
+                  name="link"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 8 }}
+                />
+              )}
+              <Text className="text-lg ml-2">
+                {uploadStatus || "Upload Profile Image"}
+              </Text>
+            </TouchableOpacity>
             <InputField
               state={password}
               placeholder={"Type your Password"}
@@ -81,15 +120,20 @@ const SingUp = () => {
           </View>
 
           <TouchableOpacity
-            onPress={handleSingUp}
-            className="bg-[#00DEC1] py-2 rounded-lg mt-5"
+            onPress={handleSignUp}
+            className="bg-[#00DEC1] py-2 rounded-lg mt-5 flex-row justify-center items-center"
+            disabled={uploading || signingUp}
           >
-            <Text className="text-4xl text-center text-white">Sign Up</Text>
+            {signingUp ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text className="text-4xl text-center text-white">Sign Up</Text>
+            )}
           </TouchableOpacity>
 
           <Text className="text-lg py-2 text-center">
             Already have an account?{" "}
-            <Link href={"singIn"} className="text-indigo-500 font-bold">
+            <Link href={"signIn"} className="text-indigo-500 font-bold">
               Sign In
             </Link>
           </Text>
@@ -99,4 +143,4 @@ const SingUp = () => {
   );
 };
 
-export default SingUp;
+export default SignUp;
