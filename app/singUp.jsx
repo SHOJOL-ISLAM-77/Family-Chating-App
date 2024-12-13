@@ -1,21 +1,8 @@
-import {
-  Entypo,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Entypo, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React, { useContext, useRef, useState } from "react";
-import {
-  Alert,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-  ActivityIndicator,
-  Keyboard,
-} from "react-native";
+import { ActivityIndicator, Alert, Image, Text, TouchableOpacity, View } from "react-native";
 
-import axios from "axios";
 import InputField from "../components/InputField";
 import KeyBoardView from "../components/KeyBoardView";
 import { AuthContext } from "../context/authContext";
@@ -39,12 +26,7 @@ const SignUp = () => {
 
     try {
       setSigningUp(true);
-      const response = await register(
-        email.current,
-        password.current,
-        name.current,
-        URL.current
-      );
+      const response = await register(email.current, password.current, name.current, URL.current);
       if (!response.success) {
         Alert.alert("Sign Up", "Invalid email or other issue");
       }
@@ -73,13 +55,7 @@ const SignUp = () => {
               state={email}
               kbType="email-address"
               placeholder={"Type your email"}
-              icon={
-                <MaterialCommunityIcons
-                  name="email-outline"
-                  size={24}
-                  color="black"
-                />
-              }
+              icon={<MaterialCommunityIcons name="email-outline" size={24} color="black" />}
             />
             <InputField
               state={name}
@@ -89,41 +65,26 @@ const SignUp = () => {
             <TouchableOpacity
               onPress={() => uploadImage(setUploading, setUploadStatus, URL)}
               className="bg-gray-200 py-2 rounded-lg flex-row items-center"
-              disabled={uploading || signingUp}
-            >
+              disabled={uploading || signingUp}>
               {uploading ? (
-                <ActivityIndicator
-                  size="small"
-                  color="black"
-                  className="ml-2"
-                />
+                <ActivityIndicator size="small" color="black" className="ml-2" />
               ) : (
-                <Entypo
-                  name="link"
-                  size={24}
-                  color="black"
-                  style={{ marginLeft: 8 }}
-                />
+                <Entypo name="link" size={24} color="black" style={{ marginLeft: 8 }} />
               )}
-              <Text className="text-lg ml-2">
-                {uploadStatus || "Upload Profile Image"}
-              </Text>
+              <Text className="text-lg ml-2">{uploadStatus || "Upload Profile Image"}</Text>
             </TouchableOpacity>
             <InputField
               state={password}
               placeholder={"Type your Password"}
               secure={true}
-              icon={
-                <MaterialIcons name="lock-outline" size={24} color="black" />
-              }
+              icon={<MaterialIcons name="lock-outline" size={24} color="black" />}
             />
           </View>
 
           <TouchableOpacity
             onPress={handleSignUp}
             className="bg-[#00DEC1] py-2 rounded-lg mt-5 flex-row justify-center items-center"
-            disabled={uploading || signingUp}
-          >
+            disabled={uploading || signingUp}>
             {signingUp ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
@@ -133,7 +94,7 @@ const SignUp = () => {
 
           <Text className="text-lg py-2 text-center">
             Already have an account?{" "}
-            <Link href={"signIn"} className="text-indigo-500 font-bold">
+            <Link href={"singIn"} className="text-indigo-500 font-bold">
               Sign In
             </Link>
           </Text>

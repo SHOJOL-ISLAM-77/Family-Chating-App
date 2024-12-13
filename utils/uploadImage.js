@@ -1,55 +1,53 @@
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-import { Alert, Keyboard } from "react-native";
+import { Keyboard } from "react-native";
 
 const uploadImage = async (setUploading, setUploadStatus, URL) => {
   Keyboard.dismiss();
 
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (status !== "granted") {
-    Alert.alert("Permission Denied", "We need access to your photos.");
-    return;
-  }
+  if (status !== "granted") return;
 
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Images,
     quality: 1,
   });
 
-  if (!result.canceled) {
-    try {
-      setUploading(true);
-      setUploadStatus("Uploading image...");
+  if (result.canceled || !result.assets || !result.assets[0].uri) return;
 
-      const formData = new FormData();
-      formData.append("key", "34087641ca74ac8c32605af6028f18a1");
-      formData.append("image", {
-        uri: result.assets[0].uri,
-        type: "image/jpeg",
-        name: "profile.jpg",
-      });
+  try {
+    setUploading(true);
+    setUploadStatus("Uploading image to Cloudinary...");
 
-      const response = await axios.post(
-        "https://api.imgbb.com/1/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+    const fileUri = result.assets[0].uri;
+    const fileType = fileUri.split(".").pop();
+    const fileName = `image.${fileType}`;
 
-      if (response.data && response.data.data && response.data.data.url) {
-        URL.current = response.data.data.url;
-        setUploadStatus("Image uploaded successfully!");
-      } else {
-        setUploadStatus("Failed to upload image.");
-      }
-    } catch (error) {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: fileUri,
+      type: `image/${fileType}`,
+      name: fileName,
+    });
+    formData.append("upload_preset", "Family-Chat");
+
+    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dhlwn2pfp/image/upload`;
+
+    const response = await axios.post(cloudinaryUrl, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (response.data && response.data.secure_url) {
+      URL.current = response.data.secure_url;
+      setUploadStatus("Image uploaded successfully!");
+    } else {
       setUploadStatus("Failed to upload image.");
-    } finally {
-      setUploading(false);
     }
+  } catch (error) {
+    console.error("Cloudinary upload error:", error.response?.data || error.message);
+    setUploadStatus("Failed to upload image.");
+  } finally {
+    setUploading(false);
   }
 };
 
