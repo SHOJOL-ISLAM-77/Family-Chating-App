@@ -5,6 +5,8 @@ import { View, Text } from "react-native";
 import ProfileHeader from "../../components/ProfileHeader";
 import { useAuth } from "../../context/authContext";
 import blurhash from "../../utils/blurHash";
+import AudioSender from "../../components/Audio";
+import AudioRecorderUploader from "../../components/Audio";
 
 const profile = () => {
   const { user } = useAuth();
@@ -31,6 +33,8 @@ const profile = () => {
           <Text className="w-full text-2xl">{user?.email}</Text>
         </View>
       </View>
+
+      <AudioRecorderUploader />
     </View>
   );
 };
