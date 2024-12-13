@@ -31,7 +31,7 @@ const uploadImage = async (setUploading, setUploadStatus, URL) => {
     });
     formData.append("upload_preset", "Family-Chat");
 
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dhlwn2pfp/image/upload`;
+    const cloudinaryUrl = process.env.CLOUDINARY_URL;
 
     const response = await axios.post(cloudinaryUrl, formData, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -44,7 +44,10 @@ const uploadImage = async (setUploading, setUploadStatus, URL) => {
       setUploadStatus("Failed to upload image.");
     }
   } catch (error) {
-    console.error("Cloudinary upload error:", error.response?.data || error.message);
+    console.error(
+      "Cloudinary upload error:",
+      error.response?.data || error.message
+    );
     setUploadStatus("Failed to upload image.");
   } finally {
     setUploading(false);

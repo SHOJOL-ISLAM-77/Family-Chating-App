@@ -4,7 +4,7 @@ import { Image, Text, View } from "react-native";
 import { useAuth } from "../context/authContext";
 
 const ShowSingleMessage = ({ message }) => {
-  console.log(message);
+
   const { user } = useAuth();
   const imageLinkRegex = /^https:\/\/res\.cloudinary\.com\/[a-zA-Z0-9_-]+\/image\/upload\/v\d+\/[a-zA-Z0-9_-]+\.jpg$/;
 
@@ -32,7 +32,7 @@ const ShowSingleMessage = ({ message }) => {
 export default ShowSingleMessage;
 
 const renderImage = (uri) => {
-  console.log(uri);
+
   return (
     <View style={{ width: 100, height: 100, justifyContent: "center" }}>
       <Image style={{ width: 100, height: 100, borderRadius: 10 }} source={{ uri }} />
